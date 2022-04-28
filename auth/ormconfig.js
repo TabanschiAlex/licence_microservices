@@ -5,7 +5,7 @@ module.exports = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: ['dist/auth/entities/*{.ts,.js}'],
+  entities: ['dist/app/entities/*{.ts,.js}'],
   seeds: ['dist/database/seeds/*{.ts,.js}'],
   factories: ['dist/database/factories/*{.ts,.js}'],
   migrations: ['dist/database/migrations/*{.ts,.js}'],
@@ -15,8 +15,8 @@ module.exports = {
   synchronize: false,
   logging: false,
   cli: {
-    entitiesDir: 'src/auth/entities',
+    entitiesDir: 'src/app/entities',
     migrationsDir: 'src/database/migrations',
-    subscribersDir: 'src/auth/subscribers',
+    subscribersDir: 'src/app/subscribers',
   },
 };

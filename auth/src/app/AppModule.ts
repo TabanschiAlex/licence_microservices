@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './AuthService';
-import { AuthController } from './AuthController';
-import { UserService } from './UserService';
-import { JwtAuthGuard } from './guards/JwtAuthGuard';
-import { JwtModule } from '@nestjs/jwt';
-import { UserController } from './UserController';
-import { User } from './entities/User';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthService } from './AuthService';
+import { AppController } from './AppController';
+import { UserService } from './UserService';
+import { JwtAuthGuard } from './guards/JwtAuthGuard';
+import { User } from './entities/User';
 
 @Module({
   imports: [
@@ -23,7 +22,7 @@ import { ConfigModule } from '@nestjs/config';
     TypeOrmModule.forRoot(),
     TypeOrmModule.forFeature([User])
   ],
-  controllers: [AuthController, UserController],
+  controllers: [AppController],
   providers: [AuthService, UserService, JwtAuthGuard]
 })
-export class AuthModule {}
+export class AppModule {}
