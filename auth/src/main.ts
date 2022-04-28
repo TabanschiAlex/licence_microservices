@@ -7,14 +7,14 @@ const bootstrap = async () => {
     transport: Transport.KAFKA,
     options: {
       client: {
-        brokers: ['localhost:9092'],
+        brokers: ['172.19.0.3:9092'],
       },
       consumer: {
-        groupId: 'auth-consumer'
-      }
-    }
+        groupId: 'auth-consumer',
+      },
+    },
   });
   await app.listen();
-}
+};
 
 bootstrap();

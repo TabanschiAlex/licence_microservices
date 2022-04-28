@@ -17,8 +17,7 @@ import { JwtAuthGuard } from './guards/JwtAuthGuard';
 @UsePipes(ValidationPipe)
 @Controller()
 export class AppController {
-  constructor(private readonly authService: AuthService, private readonly userService: UserService) {
-  }
+  constructor(private readonly authService: AuthService, private readonly userService: UserService) {}
 
   @MessagePattern('login')
   public async login(@Payload(LoginDTO) request: AuthLoginRequest): Promise<AuthResource> {

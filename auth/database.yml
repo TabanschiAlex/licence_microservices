@@ -1,0 +1,21 @@
+version: '3.3'
+
+services:
+  auth:
+    image: mysql
+    container_name: auth-db
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=auth"
+    environment:
+      MYSQL_DATABASE: auth
+      MYSQL_ROOT_PASSWORD: "123456"
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    networks:
+      - auth
+
+networks:
+  auth:
+    external: true

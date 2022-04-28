@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  microservice-auth:
+    container_name: microservice-auth
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - ${PORT}:${PORT}
+      - "9229:9229"
+    command: npm run start:dev
+    env_file:
+      - .env
+    networks:
+      - auth
+    depends_on:
+      - microservice-auth-db
+
+
+  microservice-auth-db:
+    container_name: microservice-auth-db
+    image: mysql
+    restart: unless-stopped
+    tty: true
+    networks:
+      - auth
+    environment:
+      MYSQL_DATABASE: "auth"
+      MYSQL_ROOT_PASSWORD: "123456"
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    ports:
+      - "3306:3306"
+networks:
+  auth:

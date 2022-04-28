@@ -20,9 +20,9 @@ import { User } from './entities/User';
     }),
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot(),
-    TypeOrmModule.forFeature([User])
+    TypeOrmModule.forFeature([User]),
   ],
   controllers: [AppController],
-  providers: [AuthService, UserService, JwtAuthGuard]
+  providers: [AuthService, UserService, JwtAuthGuard],
 })
 export class AppModule {}
