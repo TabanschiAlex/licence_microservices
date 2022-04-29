@@ -7,7 +7,8 @@ const bootstrap = async () => {
     transport: Transport.KAFKA,
     options: {
       client: {
-        brokers: ['172.19.0.3:9092'],
+        clientId: 'auth',
+        brokers: ['172.18.0.3:9092'],
       },
       consumer: {
         groupId: 'auth-consumer',

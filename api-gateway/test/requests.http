@@ -1,1 +1,10 @@
-http://localhost:3000/articles
+### Send request with dynamic variables in request's body
+POST http://localhost:3000/articles
+Content-Type: application/json
+
+
+{
+
+}
+
+###

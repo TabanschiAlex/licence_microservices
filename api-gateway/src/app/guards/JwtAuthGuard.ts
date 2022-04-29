@@ -1,22 +1,12 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Inject,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Observable, timeout } from 'rxjs';
 import { ClientKafka } from '@nestjs/microservices';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(
-    @Inject('AUTH_SERVICE') private readonly authService: ClientKafka,
-  ) {}
+  constructor(@Inject('AUTH_SERVICE') private readonly authService: ClientKafka) {}
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const req = context.switchToHttp().getRequest();
     const authHeader = req.headers.authorization;
     const bearer = authHeader?.split(' ')[0];
@@ -26,7 +16,7 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException('Invalid token');
     }
 
-    req.user = this.authService.send('verify_token', token);
+    req.user = this.authService.send('verify_token', token).pipe(timeout(5000));
 
     return true;
   }

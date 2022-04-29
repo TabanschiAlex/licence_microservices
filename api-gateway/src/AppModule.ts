@@ -16,7 +16,7 @@ import { ReviewController } from './app/controllers/ReviewController';
         options: {
           client: {
             clientId: 'auth',
-            brokers: ['172.19.0.3:9092'],
+            brokers: ['172.18.0.3:9092'],
           },
           consumer: {
             groupId: 'auth-consumer',
@@ -29,7 +29,7 @@ import { ReviewController } from './app/controllers/ReviewController';
         options: {
           client: {
             clientId: 'articles',
-            brokers: ['172.19.0.3:9092'],
+            brokers: ['172.18.0.3:9092'],
           },
           consumer: {
             groupId: 'articles-consumer',
@@ -42,7 +42,7 @@ import { ReviewController } from './app/controllers/ReviewController';
         options: {
           client: {
             clientId: 'reviews',
-            brokers: ['172.19.0.3:9092'],
+            brokers: ['172.18.0.3:9092'],
           },
           consumer: {
             groupId: 'reviews-consumer',

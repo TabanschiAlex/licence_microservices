@@ -11,8 +11,8 @@ module.exports = {
   migrations: ['dist/database/migrations/*{.ts,.js}'],
   /*subscribers: ["dist/app/subscribers/!**!/!*{.ts,.js}"],*/
   autoLoadEntities: true,
-  migrationsRun: true,
-  synchronize: false,
+  migrationsRun: false,
+  synchronize: true,
   logging: false,
   cli: {
     entitiesDir: 'src/app/entities',
