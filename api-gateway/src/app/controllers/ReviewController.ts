@@ -1,16 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Inject,
-  Param,
-  Post,
-  Put,
-  Query,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { JwtAuthGuard } from '../guards/JwtAuthGuard';
 import { CreateReviewRequest } from '../requests/review/CreateReviewRequest';
@@ -18,9 +6,7 @@ import { UpdateReviewRequest } from '../requests/review/UpdateReviewRequest';
 
 @Controller('reviews')
 export class ReviewController {
-  constructor(
-    @Inject('AUTH_SERVICE') private readonly reviewService: ClientKafka,
-  ) {}
+  constructor(@Inject('AUTH_SERVICE') private readonly reviewService: ClientKafka) {}
 
   @Get()
   public async index(@Query() query) {
@@ -40,10 +26,7 @@ export class ReviewController {
 
   @Put(':id')
   @UseGuards(JwtAuthGuard)
-  public async update(
-    @Param('id') id: string,
-    @Body() request: UpdateReviewRequest,
-  ) {
+  public async update(@Param('id') id: string, @Body() request: UpdateReviewRequest) {
     return this.reviewService.send('update_review', request);
   }
 
