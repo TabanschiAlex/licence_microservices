@@ -1,15 +1,8 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-
 export class AuthRegisterRequest {
-  @IsNotEmpty()
-  @IsEmail()
-  readonly email: string;
-
-  @IsNotEmpty()
-  @IsString()
-  readonly password: string;
-
-  @IsNotEmpty()
-  @IsString()
-  readonly passwordConfirmation: string;
+  constructor(
+    readonly name: string = null,
+    readonly email: string,
+    readonly password: string,
+    readonly passwordConfirmation: string,
+  ) {}
 }

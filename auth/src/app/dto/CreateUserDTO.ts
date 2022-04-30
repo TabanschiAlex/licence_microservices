@@ -1,9 +1,9 @@
-import { ArgumentMetadata, PipeTransform } from '@nestjs/common';
+import { PipeTransform } from '@nestjs/common';
 import { CreateUserRequest } from '../requests/user/CreateUserRequest';
 import { Roles } from '../enums/Roles';
 
-export class UserDTO implements PipeTransform {
-  transform(user: CreateUserRequest, metadata: ArgumentMetadata): CreateUserRequest {
+export class CreateUserDTO implements PipeTransform {
+  transform(user: CreateUserRequest): CreateUserRequest {
     return {
       name: user.name ?? null,
       role: user.role ?? Roles.USER,

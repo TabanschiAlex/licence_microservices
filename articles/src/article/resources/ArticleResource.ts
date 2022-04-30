@@ -15,7 +15,7 @@ export class ArticleResource {
 
   /*public static withReviews(article: Article) {
     const oneArticle: any = this.one(article);
-    oneArticle.reviews = ReviewResource.factory(article.reviews);
+    oneArticle.reviews = ReviewResource.factories(article.reviews);
 
     return oneArticle;
   }*/

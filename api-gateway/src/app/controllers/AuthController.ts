@@ -68,7 +68,7 @@ export class AuthController implements OnModuleInit {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put('users/:uuid')
+  @Put('users')
   public async update(@Body() request: UpdateUserRequest) {
     return this.authService.send('update_user', request).pipe(timeout(5000));
   }

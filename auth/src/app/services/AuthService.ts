@@ -21,12 +21,7 @@ export class AuthService {
     }
 
     AuthService.checkPasswordsIdentity(request.password, request.passwordConfirmation);
-
-    const hashedPassword = await this.userService.hashPassword(request.password);
-    const user = await this.userService.create({
-      ...request,
-      password: hashedPassword,
-    });
+    const user = await this.userService.create(request);
 
     return this.generateToken(user);
   }
