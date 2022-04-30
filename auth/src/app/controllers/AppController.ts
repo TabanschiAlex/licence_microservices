@@ -1,16 +1,15 @@
 import { Controller, Res, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { AuthService } from './AuthService';
-import { AuthLoginRequest } from './requests/auth/AuthLoginRequest';
-import { LoginDTO } from './dto/LoginDTO';
-import { RegisterDTO } from './dto/RegisterDTO';
-import { AuthRegisterRequest } from './requests/auth/AuthRegisterRequest';
-import { AuthResource } from './resources/auth/AuthResource';
-import { UserService } from './UserService';
-import { UserResource } from './resources/user/UserResource';
-import { UserDTO } from './dto/UserDTO';
-import { CreateUserRequest } from './requests/user/CreateUserRequest';
-import { UpdateUserRequest } from './requests/user/UpdateUserRequest';
+import { AuthService } from '../services/AuthService';
+import { AuthLoginRequest } from '../requests/auth/AuthLoginRequest';
+import { RegisterDTO } from '../dto/RegisterDTO';
+import { AuthRegisterRequest } from '../requests/auth/AuthRegisterRequest';
+import { AuthResource } from '../resources/auth/AuthResource';
+import { UserService } from '../services/UserService';
+import { UserResource } from '../resources/user/UserResource';
+import { UserDTO } from '../dto/UserDTO';
+import { CreateUserRequest } from '../requests/user/CreateUserRequest';
+import { UpdateUserRequest } from '../requests/user/UpdateUserRequest';
 import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 
@@ -24,10 +23,10 @@ export class AppController {
   ) {}
 
   @MessagePattern('login')
-  public async login(@Payload('value') request) {
-    console.log(request);
-    // console.log(await this.authService.login(request));
-    return 1;
+  public async login(@Payload('value') request: AuthLoginRequest) {
+    console.log(request, typeof request);
+
+    return await this.authService.login(request);
   }
 
   @MessagePattern('register')

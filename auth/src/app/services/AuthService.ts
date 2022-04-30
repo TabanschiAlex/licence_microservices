@@ -1,11 +1,11 @@
-import { Injectable, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UserService } from './UserService';
 import { JwtService } from '@nestjs/jwt';
-import { User } from './entities/User';
-import { AuthLoginRequest } from './requests/auth/AuthLoginRequest';
-import { AuthResource } from './resources/auth/AuthResource';
-import { AuthRegisterRequest } from './requests/auth/AuthRegisterRequest';
+import { User } from '../entities/User';
+import { AuthLoginRequest } from '../requests/auth/AuthLoginRequest';
+import { AuthResource } from '../resources/auth/AuthResource';
+import { AuthRegisterRequest } from '../requests/auth/AuthRegisterRequest';
 
 @Injectable()
 export class AuthService {
@@ -46,7 +46,11 @@ export class AuthService {
   private async validateUser(authDto: AuthLoginRequest): Promise<User> {
     const user = await this.userService.getUserByEmail(authDto.email);
 
-    if (!user && !(await bcrypt.compare(authDto.password, user.password))) {
+    if (!user) {
+      throw new NotFoundException('User does not exist');
+    }
+
+    if (!(await bcrypt.compare(authDto.password, user.password))) {
       throw new UnauthorizedException('Password does not match');
     }
 

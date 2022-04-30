@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthService } from './AuthService';
-import { AppController } from './AppController';
-import { UserService } from './UserService';
-import { JwtAuthGuard } from './guards/JwtAuthGuard';
+import { AuthService } from './services/AuthService';
+import { AppController } from './controllers/AppController';
+import { UserService } from './services/UserService';
 import { User } from './entities/User';
+import { APP_FILTER } from '@nestjs/core';
+import { AllExceptionsFilter } from './exceptions/AllExceptionsFilter';
 
 @Module({
   imports: [
@@ -23,6 +24,13 @@ import { User } from './entities/User';
     TypeOrmModule.forFeature([User]),
   ],
   controllers: [AppController],
-  providers: [AuthService, UserService, JwtAuthGuard],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+    AuthService,
+    UserService,
+  ],
 })
 export class AppModule {}

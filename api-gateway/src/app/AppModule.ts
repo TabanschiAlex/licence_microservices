@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AllExceptionsFilter } from './app/exceptions/AllExceptionsFilter';
-import { ArticleController } from './app/controllers/ArticleController';
-import { AuthController } from './app/controllers/AuthController';
-import { ReviewController } from './app/controllers/ReviewController';
+import { AllExceptionsFilter } from './exceptions/AllExceptionsFilter';
+import { ArticleController } from './controllers/ArticleController';
+import { AuthController } from './controllers/AuthController';
+import { ReviewController } from './controllers/ReviewController';
 
 @Module({
   imports: [

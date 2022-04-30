@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/User';
+import { User } from '../entities/User';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
-import { BasicQueryRequest } from './requests/BasicQueryRequest';
-import { CreateUserRequest } from './requests/user/CreateUserRequest';
+import { BasicQueryRequest } from '../requests/BasicQueryRequest';
+import { CreateUserRequest } from '../requests/user/CreateUserRequest';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import * as bcrypt from 'bcrypt';
 

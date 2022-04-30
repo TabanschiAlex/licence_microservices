@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Observable, timeout } from 'rxjs';
 import { ClientKafka } from '@nestjs/microservices';
+import { ServiceCurrentlyUnavailableException } from '../exceptions/ServiceCurrentlyUnavailableException';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -16,7 +17,11 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException('Invalid token');
     }
 
-    req.user = this.authService.send('verify_token', token).pipe(timeout(5000));
+    try {
+      req.user = this.authService.send('verify_token', token).pipe(timeout(5000));
+    } catch (e) {
+      throw new ServiceCurrentlyUnavailableException();
+    }
 
     return true;
   }
