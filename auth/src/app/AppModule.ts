@@ -14,7 +14,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
   imports: [
     ClientsModule.register([
       {
-        name: 'ARTICLES_SERVICE',
+        name: 'ARTICLE_SERVICE',
         transport: Transport.KAFKA,
         options: {
           client: {
@@ -27,7 +27,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         },
       },
       {
-        name: 'REVIEWS_SERVICE',
+        name: 'REVIEW_SERVICE',
         transport: Transport.KAFKA,
         options: {
           client: {

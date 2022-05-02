@@ -13,7 +13,7 @@ export class ArticleService {
   constructor(
     @InjectRepository(Article) private readonly articleRepository: Repository<Article>,
     @Inject('') private readonly userService: ClientKafka,
-    @Inject('REVIEWS_SERVICE') private readonly reviewService: ClientKafka,
+    @Inject('REVIEW_SERVICE') private readonly reviewService: ClientKafka,
   ) {}
 
   public async getAll(query: BasicQueryRequest): Promise<Article[]> {

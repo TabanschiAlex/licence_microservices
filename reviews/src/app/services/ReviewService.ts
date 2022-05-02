@@ -17,7 +17,7 @@ export class ReviewService {
     return await this.reviewRepository.find({ skip, take });
   }
 
-  public async getOne(id: string): Promise<Review> {
+  public async getOne(id: number): Promise<Review> {
     return await this.reviewRepository.findOneOrFail(id);
   }
 
@@ -25,13 +25,35 @@ export class ReviewService {
     return await this.reviewRepository.save(request);
   }
 
-  public async update(id: string, request: object | QueryDeepPartialEntity<Review>): Promise<UpdateResult> {
+  public async update(id: number, request: object | QueryDeepPartialEntity<Review>): Promise<UpdateResult> {
     return await this.reviewRepository.update(id, request);
   }
 
-  public async delete(id: string): Promise<DeleteResult> {
+  public async delete(id: number): Promise<DeleteResult> {
     await this.reviewRepository.findOneOrFail(id);
 
     return await this.reviewRepository.delete(id);
+  }
+
+  public deleteByUser(user_uuid: string): void {
+    this.reviewRepository
+      .delete({ user_uuid })
+      .then(() => {
+        console.log(`All review created by user ${user_uuid} deleted`);
+      })
+      .catch(() => {
+        console.error(`Error deleting reviews created by user ${user_uuid}`);
+      });
+  }
+
+  public deleteByArticle(article_id: number): void {
+    this.reviewRepository
+      .delete({ article_id })
+      .then(() => {
+        console.log(`All review linked with article ${article_id} deleted`);
+      })
+      .catch(() => {
+        console.error(`Error deleting reviews linked with article ${article_id}`);
+      });
   }
 }

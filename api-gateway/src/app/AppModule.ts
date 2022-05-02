@@ -24,7 +24,7 @@ import { ReviewController } from './controllers/ReviewController';
         },
       },
       {
-        name: 'ARTICLES_SERVICE',
+        name: 'ARTICLE_SERVICE',
         transport: Transport.KAFKA,
         options: {
           client: {
@@ -37,7 +37,7 @@ import { ReviewController } from './controllers/ReviewController';
         },
       },
       {
-        name: 'REVIEWS_SERVICE',
+        name: 'REVIEW_SERVICE',
         transport: Transport.KAFKA,
         options: {
           client: {

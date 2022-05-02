@@ -17,7 +17,7 @@ import { ClientKafka } from '@nestjs/microservices';
 
 @Controller('articles')
 export class ArticleController implements OnModuleInit {
-  constructor(@Inject('ARTICLES_SERVICE') private readonly articleService: ClientKafka) {}
+  constructor(@Inject('ARTICLE_SERVICE') private readonly articleService: ClientKafka) {}
 
   async onModuleInit() {
     this.articleService.subscribeToResponseOf('get_articles');

@@ -22,8 +22,8 @@ export class AppController {
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    @Inject('ARTICLES_SERVICE') private readonly articleService: ClientKafka,
-    @Inject('REVIEWS_SERVICE') private readonly reviewService: ClientKafka,
+    @Inject('ARTICLE_SERVICE') private readonly articleService: ClientKafka,
+    @Inject('REVIEW_SERVICE') private readonly reviewService: ClientKafka,
   ) {}
 
   @MessagePattern('login')

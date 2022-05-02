@@ -20,7 +20,7 @@ export class AppController {
   }
 
   @MessagePattern('get_review')
-  public async edit(@Payload('value') id: string) {
+  public async edit(@Payload('value') id: number) {
     return ReviewResource.one(await this.reviewService.getOne(id));
   }
 
@@ -38,15 +38,19 @@ export class AppController {
   }
 
   @MessagePattern('destroy_review')
-  public async destroy(@Payload('value') id: string): Promise<string> {
+  public async destroy(@Payload('value') id: number): Promise<string> {
     await this.reviewService.delete(id);
 
     return 'Deleted';
   }
 
-  /*@EventPattern('user_deleted')
-  public async userDeleted(@Payload('value') user_uuid: string) {}
+  @EventPattern('user_deleted')
+  public userDeleted(@Payload('value') user_uuid: string): void {
+    this.reviewService.deleteByUser(user_uuid);
+  }
 
   @EventPattern('article_deleted')
-  public async articleDeleted(@Payload('value') id: string) {}*/
+  public articleDeleted(@Payload('value') id: number): void {
+    this.reviewService.deleteByArticle(id);
+  }
 }

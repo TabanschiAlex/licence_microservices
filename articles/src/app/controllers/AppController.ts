@@ -14,7 +14,7 @@ import { UpdateArticleDTO } from '../dto/UpdateArticleDTO';
 export class AppController {
   constructor(
     private readonly articleService: ArticleService,
-    @Inject('REVIEWS_SERVICE') private readonly reviewService: ClientKafka,
+    @Inject('REVIEW_SERVICE') private readonly reviewService: ClientKafka,
   ) {}
 
   @MessagePattern('get_articles')
