@@ -1,5 +1,5 @@
-import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { Controller, Inject, UsePipes, ValidationPipe } from '@nestjs/common';
+import { ClientKafka, MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthService } from '../services/AuthService';
 import { AuthLoginRequest } from '../requests/auth/AuthLoginRequest';
 import { AuthRegisterRequest } from '../requests/auth/AuthRegisterRequest';
@@ -22,6 +22,8 @@ export class AppController {
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    @Inject('ARTICLES_SERVICE') private readonly articleService: ClientKafka,
+    @Inject('REVIEWS_SERVICE') private readonly reviewService: ClientKafka,
   ) {}
 
   @MessagePattern('login')
@@ -35,7 +37,7 @@ export class AppController {
   }
 
   @MessagePattern('get_users')
-  public async index(@Payload() query: BasicQueryRequest): Promise<UserResource> {
+  public async index(@Payload('value') query: BasicQueryRequest): Promise<UserResource> {
     return UserResource.factory(await this.userService.getAll(new QueryDTO().transform(query)));
   }
 
@@ -60,6 +62,8 @@ export class AppController {
   @MessagePattern('destroy_user')
   public async destroy(@Payload('value') uuid: string): Promise<string> {
     await this.userService.delete(uuid);
+    this.articleService.emit('user_deleted', uuid);
+    this.reviewService.emit('user_deleted', uuid);
 
     return 'User deleted successfully';
   }

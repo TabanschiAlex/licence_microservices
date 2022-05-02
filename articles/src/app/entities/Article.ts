@@ -1,13 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('articles')
 export class Article {
@@ -23,11 +14,10 @@ export class Article {
   @Column({ type: 'text' })
   text: string;
 
-/*  @ManyToOne(() => User, (user) => user.articles, { onDelete: 'SET NULL', nullable: true })
-  @JoinColumn({ name: 'user_uuid' })
-  user: User;
+  @Column({ type: 'uuid', unique: true, nullable: true, primary: true })
+  user_uuid: string;
 
-  @OneToMany(() => Review, (reviews) => reviews.article)
+  /*@OneToMany(() => Review, (reviews) => reviews.app)
   reviews: Review[];*/
 
   @CreateDateColumn({ name: 'created_at', nullable: true })

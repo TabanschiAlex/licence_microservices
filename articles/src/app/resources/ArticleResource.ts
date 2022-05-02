@@ -13,9 +13,9 @@ export class ArticleResource {
     };
   }
 
-  /*public static withReviews(article: Article) {
-    const oneArticle: any = this.one(article);
-    oneArticle.reviews = ReviewResource.factories(article.reviews);
+  /*public static withReviews(app: Article) {
+    const oneArticle: any = this.one(app);
+    oneArticle.reviews = ReviewResource.factories(app.reviews);
 
     return oneArticle;
   }*/

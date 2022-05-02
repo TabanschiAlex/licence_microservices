@@ -1,31 +1,16 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
-import { AuthService } from './services/AuthService';
-import { AppController } from './controllers/AppController';
-import { UserService } from './services/UserService';
-import { User } from './entities/User';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './exceptions/AllExceptionsFilter';
+import { AppController } from './controllers/AppController';
+import { ArticleService } from './services/ArticleService';
+import { ConfigModule } from '@nestjs/config';
+import { Article } from './entities/Article';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
     ClientsModule.register([
-      {
-        name: 'ARTICLES_SERVICE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'articles',
-            brokers: ['172.18.0.3:9092'],
-          },
-          consumer: {
-            groupId: 'articles-consumer',
-          },
-        },
-      },
       {
         name: 'REVIEWS_SERVICE',
         transport: Transport.KAFKA,
@@ -40,17 +25,9 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         },
       },
     ]),
-    JwtModule.registerAsync({
-      useFactory: () => ({
-        secret: process.env.JWT_KEY,
-        signOptions: {
-          expiresIn: '16d',
-        },
-      }),
-    }),
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot(),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([Article]),
   ],
   controllers: [AppController],
   providers: [
@@ -58,8 +35,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
     },
-    AuthService,
-    UserService,
+    ArticleService,
   ],
 })
 export class AppModule {}
