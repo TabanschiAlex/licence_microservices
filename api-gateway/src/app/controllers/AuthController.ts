@@ -14,11 +14,6 @@ import {
 import { ClientKafka } from '@nestjs/microservices';
 import { timeout } from 'rxjs';
 import { JwtAuthGuard } from '../guards/JwtAuthGuard';
-import { AuthRegisterRequest } from '../requests/auth/AuthRegisterRequest';
-import { AuthLoginRequest } from '../requests/auth/AuthLoginRequest';
-import { CreateUserRequest } from '../requests/user/CreateUserRequest';
-import { UpdateUserRequest } from '../requests/user/UpdateUserRequest';
-import { BasicQueryRequest } from '../requests/BasicQueryRequest';
 
 @Controller()
 export class AuthController implements OnModuleInit {
@@ -40,18 +35,18 @@ export class AuthController implements OnModuleInit {
   }
 
   @Post('auth/login')
-  public async login(@Body() request: AuthLoginRequest) {
+  public async login(@Body() request: any) {
     return this.authService.send('login', request).pipe(timeout(5000));
   }
 
   @Post('auth/register')
-  public async register(@Body() request: AuthRegisterRequest) {
+  public async register(@Body() request: any) {
     return this.authService.send('register', request).pipe(timeout(5000));
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('users')
-  public async index(@Query() query: BasicQueryRequest) {
+  public async index(@Query() query: any) {
     return this.authService.send('get_users', query).pipe(timeout(5000));
   }
 
@@ -63,13 +58,13 @@ export class AuthController implements OnModuleInit {
 
   @UseGuards(JwtAuthGuard)
   @Post('users')
-  public store(@Body() request: CreateUserRequest) {
+  public store(@Body() request: any) {
     return this.authService.send('store_user', request).pipe(timeout(5000));
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('users')
-  public async update(@Body() request: UpdateUserRequest) {
+  public async update(@Body() request: any) {
     return this.authService.send('update_user', request).pipe(timeout(5000));
   }
 

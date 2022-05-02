@@ -12,7 +12,6 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ArticleRequest } from '../requests/article/ArticleRequest';
 import { JwtAuthGuard } from '../guards/JwtAuthGuard';
 import { ClientKafka } from '@nestjs/microservices';
 
@@ -30,7 +29,7 @@ export class ArticleController implements OnModuleInit {
   }
 
   @Get()
-  public async index(@Query() query) {
+  public async index(@Query() query: any) {
     return this.articleService.send('get_articles', query);
   }
 
@@ -41,13 +40,13 @@ export class ArticleController implements OnModuleInit {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  public async store(@Body() request: ArticleRequest, @Req() req) {
+  public async store(@Body() request: any, @Req() req) {
     return this.articleService.send('store_article', request);
   }
 
   @Put(':id')
   @UseGuards(JwtAuthGuard)
-  public async update(@Param('id') id: string, @Body() request: ArticleRequest) {
+  public async update(@Param('id') id: string, @Body() request: any) {
     return this.articleService.send('update_article', request);
   }
 
