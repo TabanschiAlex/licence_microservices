@@ -4,7 +4,7 @@ export class createArticleTable1650970824011 implements MigrationInterface {
   private readonly table = 'articles';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.createSchema(process.env.DB_NAME, true);
+    // await queryRunner.createSchema(process.env.DB_NAME, true); // Mysql not supported
     await queryRunner.createTable(
       new Table({
         name: this.table,
@@ -20,7 +20,7 @@ export class createArticleTable1650970824011 implements MigrationInterface {
           new TableColumn({ name: 'title', type: 'varchar', length: '150' }),
           new TableColumn({ name: 'description', type: 'varchar', length: '255' }),
           new TableColumn({ name: 'text', type: 'text' }),
-          new TableColumn({ name: 'user_uuid', type: 'uuid', isNullable: true }),
+          new TableColumn({ name: 'user_uuid', type: 'char', length: '36', isNullable: true }),
           new TableColumn({ name: 'created_at', type: 'datetime', isNullable: true, default: 'now()' }),
           new TableColumn({
             name: 'updated_at',

@@ -4,7 +4,7 @@ export class createReviewTable1650971550804 implements MigrationInterface {
   private readonly table = 'reviews';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.createSchema(process.env.DB_NAME, true);
+    // await queryRunner.createSchema(process.env.DB_NAME, true); // Mysql not supported
     await queryRunner.createTable(
       new Table({
         name: this.table,

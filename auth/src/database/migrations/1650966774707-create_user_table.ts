@@ -5,7 +5,7 @@ export class createUserTable1650966774707 implements MigrationInterface {
   private readonly table = 'users';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.createSchema(process.env.DB_NAME, true);
+    // await queryRunner.createSchema(process.env.DB_NAME, true); // Mysql not supported
     await queryRunner.createTable(
       new Table({
         name: this.table,

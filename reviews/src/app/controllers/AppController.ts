@@ -9,7 +9,7 @@ import { QueryDTO } from '../dto/QueryDTO';
 import { CreateReviewDTO } from '../dto/CreateReviewDTO';
 import { UpdateReviewDTO } from '../dto/UpdateReviewDTO';
 
-@Controller('reviews')
+@Controller()
 @UsePipes(ValidationPipe)
 export class AppController {
   constructor(private readonly reviewService: ReviewService) {}
@@ -24,7 +24,7 @@ export class AppController {
     return ReviewResource.one(await this.reviewService.getOne(id));
   }
 
-  @MessagePattern()
+  @MessagePattern('get_review')
   public async store(@Payload('value') request: CreateReviewRequest): Promise<ReviewResource> {
     return ReviewResource.one(await this.reviewService.store(new CreateReviewDTO().transform(request)));
   }
