@@ -1,12 +1,13 @@
 import { PipeTransform } from '@nestjs/common';
 import { BasicQueryRequest } from '../requests/BasicQueryRequest';
+import { RequestWithUser } from '../interfaces/RequestWithUser';
 
 export class QueryDTO implements PipeTransform {
-  transform(query: BasicQueryRequest): BasicQueryRequest {
+  transform(request: RequestWithUser): BasicQueryRequest {
     return {
       page: {
-        number: query?.page?.number ?? 1,
-        size: query?.page?.size ?? 10,
+        number: request.body?.page?.number ?? 1,
+        size: request.body?.page?.size ?? 10,
       },
     };
   }

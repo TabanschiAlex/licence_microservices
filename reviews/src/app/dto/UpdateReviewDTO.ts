@@ -1,13 +1,12 @@
 import { PipeTransform } from '@nestjs/common';
 import { UpdateReviewRequest } from '../requests/UpdateReviewRequest';
+import { RequestWithUser } from '../interfaces/RequestWithUser';
 
 export class UpdateReviewDTO implements PipeTransform {
-  transform(review: UpdateReviewRequest): UpdateReviewRequest {
+  transform(request: RequestWithUser): UpdateReviewRequest {
     return {
-      id: review.id,
-      text: review.text,
-      article_id: review.article_id,
-      user_uuid: review.user_uuid,
+      id: request.body.id,
+      text: request.body.text,
     };
   }
 }

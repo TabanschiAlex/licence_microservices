@@ -1,13 +1,11 @@
 import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { ReviewService } from '../services/ReviewService';
 import { ReviewResource } from '../resources/ReviewResource';
-import { CreateReviewRequest } from '../requests/CreateReviewRequest';
-import { UpdateReviewRequest } from '../requests/UpdateReviewRequest';
-import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
-import { BasicQueryRequest } from '../requests/BasicQueryRequest';
 import { QueryDTO } from '../dto/QueryDTO';
 import { CreateReviewDTO } from '../dto/CreateReviewDTO';
 import { UpdateReviewDTO } from '../dto/UpdateReviewDTO';
+import { RequestWithUser } from '../interfaces/RequestWithUser';
 
 @Controller()
 @UsePipes(ValidationPipe)
@@ -15,22 +13,22 @@ export class AppController {
   constructor(private readonly reviewService: ReviewService) {}
 
   @MessagePattern('get_reviews')
-  public async index(@Payload('value') query: BasicQueryRequest): Promise<ReviewResource> {
-    return ReviewResource.factory(await this.reviewService.getAll(new QueryDTO().transform(query)));
+  public async index(@Payload('value') request: RequestWithUser): Promise<ReviewResource> {
+    return ReviewResource.factory(await this.reviewService.getAll(new QueryDTO().transform(request)));
   }
 
   @MessagePattern('get_review')
-  public async edit(@Payload('value') id: number) {
-    return ReviewResource.one(await this.reviewService.getOne(id));
+  public async edit(@Payload('value') request: RequestWithUser) {
+    return ReviewResource.one(await this.reviewService.getOne(request.body.id));
   }
 
   @MessagePattern('get_review')
-  public async store(@Payload('value') request: CreateReviewRequest): Promise<ReviewResource> {
+  public async store(@Payload('value') request: RequestWithUser): Promise<ReviewResource> {
     return ReviewResource.one(await this.reviewService.store(new CreateReviewDTO().transform(request)));
   }
 
   @MessagePattern('update_review')
-  public async update(@Payload('value') request: UpdateReviewRequest): Promise<string> {
+  public async update(@Payload('value') request: RequestWithUser): Promise<string> {
     const dto = new UpdateReviewDTO().transform(request);
     await this.reviewService.update(dto.id, dto);
 
@@ -38,8 +36,8 @@ export class AppController {
   }
 
   @MessagePattern('destroy_review')
-  public async destroy(@Payload('value') id: number): Promise<string> {
-    await this.reviewService.delete(id);
+  public async destroy(@Payload('value') request: RequestWithUser): Promise<string> {
+    await this.reviewService.delete(request.body.id);
 
     return 'Deleted';
   }

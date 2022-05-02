@@ -1,19 +1,10 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Inject,
-  OnModuleInit,
-  Param,
-  Post,
-  Put,
-  Query,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Delete, Get, Inject, OnModuleInit, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { JwtAuthGuard } from '../guards/JwtAuthGuard';
+import { RequestWithUser } from '../interfaces/RequestWithUser';
+import { RequestDTO } from '../dto/RequestDTO';
+import { DataTypes } from '../enums/DataTypes';
+import { timeout } from 'rxjs';
 
 @Controller('reviews')
 export class ReviewController implements OnModuleInit {
@@ -29,30 +20,40 @@ export class ReviewController implements OnModuleInit {
   }
 
   @Get()
-  public async index(@Query() query: any) {
-    return this.reviewService.send('get_reviews', query);
+  public async index(@Req() request: RequestWithUser) {
+    return this.reviewService
+      .send('get_reviews', new RequestDTO(DataTypes.QUERY).transform(request))
+      .pipe(timeout(5000));
   }
 
   @Get(':id')
-  public async edit(@Param('id') id: string) {
-    return this.reviewService.send('get_review', id);
+  public async edit(@Req() request: RequestWithUser) {
+    return this.reviewService
+      .send('get_review', new RequestDTO(DataTypes.PARAMS).transform(request))
+      .pipe(timeout(5000));
   }
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  public async store(@Body() request: any, @Req() req) {
-    return this.reviewService.send('store_review', request);
+  public async store(@Req() request: RequestWithUser) {
+    return this.reviewService
+      .send('store_review', new RequestDTO(DataTypes.BODY).transform(request))
+      .pipe(timeout(5000));
   }
 
   @Put(':id')
   @UseGuards(JwtAuthGuard)
-  public async update(@Param('id') id: string, @Body() request) {
-    return this.reviewService.send('update_review', request);
+  public async update(@Req() request: RequestWithUser) {
+    return this.reviewService
+      .send('update_review', new RequestDTO(DataTypes.BODY).transform(request))
+      .pipe(timeout(5000));
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  public async destroy(@Param('id') id: string) {
-    return this.reviewService.send('destroy_review', id);
+  public async destroy(@Req() request: RequestWithUser) {
+    return this.reviewService
+      .send('destroy_review', new RequestDTO(DataTypes.PARAMS).transform(request))
+      .pipe(timeout(5000));
   }
 }

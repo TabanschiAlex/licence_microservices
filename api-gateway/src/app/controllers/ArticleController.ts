@@ -1,19 +1,10 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Inject,
-  OnModuleInit,
-  Param,
-  Post,
-  Put,
-  Query,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Delete, Get, Inject, OnModuleInit, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../guards/JwtAuthGuard';
 import { ClientKafka } from '@nestjs/microservices';
+import { RequestWithUser } from '../interfaces/RequestWithUser';
+import { RequestDTO } from '../dto/RequestDTO';
+import { DataTypes } from '../enums/DataTypes';
+import { timeout } from 'rxjs';
 
 @Controller('articles')
 export class ArticleController implements OnModuleInit {
@@ -29,30 +20,40 @@ export class ArticleController implements OnModuleInit {
   }
 
   @Get()
-  public async index(@Query() query: any) {
-    return this.articleService.send('get_articles', query);
+  public async index(@Req() request: RequestWithUser) {
+    return this.articleService
+      .send('get_articles', new RequestDTO(DataTypes.QUERY).transform(request))
+      .pipe(timeout(5000));
   }
 
   @Get(':id')
-  public async edit(@Param('id') id: string) {
-    return this.articleService.send('get_article', id);
+  public async edit(@Req() request: RequestWithUser) {
+    return this.articleService
+      .send('get_article', new RequestDTO(DataTypes.PARAMS).transform(request))
+      .pipe(timeout(5000));
   }
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  public async store(@Body() request: any, @Req() req) {
-    return this.articleService.send('store_article', request);
+  public async store(@Req() request: RequestWithUser) {
+    return this.articleService
+      .send('store_article', new RequestDTO(DataTypes.BODY).transform(request))
+      .pipe(timeout(5000));
   }
 
   @Put(':id')
   @UseGuards(JwtAuthGuard)
-  public async update(@Param('id') id: string, @Body() request: any) {
-    return this.articleService.send('update_article', request);
+  public async update(@Req() request: RequestWithUser) {
+    return this.articleService
+      .send('update_article', new RequestDTO(DataTypes.BODY).transform(request))
+      .pipe(timeout(5000));
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  public async destroy(@Param('id') id: string) {
-    return this.articleService.send('destroy_article', id);
+  public async destroy(@Req() request: RequestWithUser) {
+    return this.articleService
+      .send('destroy_article', new RequestDTO(DataTypes.PARAMS).transform(request))
+      .pipe(timeout(5000));
   }
 }

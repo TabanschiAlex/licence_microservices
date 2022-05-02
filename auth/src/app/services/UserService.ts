@@ -26,13 +26,10 @@ export class UserService {
     user.role = request.role;
     user.name = request.name;
 
-    console.log(user);
-
     return await this.userRepository.save(user);
   }
 
   public async update(uuid: string, request: object | QueryDeepPartialEntity<User>): Promise<UpdateResult> {
-    console.log(request);
     return await this.userRepository.update({ uuid: uuid }, request);
   }
 

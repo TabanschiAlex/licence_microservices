@@ -24,8 +24,6 @@ export class AppController {
 
   @MessagePattern('login')
   public async login(@Payload('value') request: RequestWithUser): Promise<string> {
-    console.log(request);
-    console.log(new LoginDTO().transform(request));
     return JSON.stringify(await this.authService.login(new LoginDTO().transform(request)));
   }
 
@@ -72,8 +70,7 @@ export class AppController {
   }
 
   @MessagePattern('verify_token')
-  public async verifyToken(@Payload('token') token: string): Promise<any> {
-    console.log(token);
-    return await this.jwtService.verify(token);
+  public async verifyToken(@Payload('value') request): Promise<any> {
+    return await this.jwtService.verify(request);
   }
 }

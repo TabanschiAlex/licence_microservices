@@ -1,13 +1,14 @@
 import { PipeTransform } from '@nestjs/common';
 import { UpdateArticleRequest } from '../requests/UpdateArticleRequest';
+import { RequestWithUser } from '../interfaces/RequestWithUser';
 
 export class UpdateArticleDTO implements PipeTransform {
-  transform(article: UpdateArticleRequest): UpdateArticleRequest {
+  transform(request: RequestWithUser): UpdateArticleRequest {
     return {
-      id: article.id,
-      title: article.title,
-      description: article.description,
-      text: article.text,
+      id: request.body.id,
+      title: request.body.title,
+      description: request.body.description,
+      text: request.body.text,
     };
   }
 }
