@@ -6,13 +6,11 @@ import { Article } from '../entities/Article';
 import { CreateArticleRequest } from '../requests/CreateArticleRequest';
 import { BasicQueryRequest } from '../requests/BasicQueryRequest';
 import { ClientKafka } from '@nestjs/microservices';
-import { timeout } from 'rxjs';
 
 @Injectable()
 export class ArticleService {
   constructor(
     @InjectRepository(Article) private readonly articleRepository: Repository<Article>,
-    @Inject('') private readonly userService: ClientKafka,
     @Inject('REVIEW_SERVICE') private readonly reviewService: ClientKafka,
   ) {}
 
@@ -28,13 +26,12 @@ export class ArticleService {
   }
 
   public async store(request: CreateArticleRequest): Promise<Article> {
-    const user: any = await this.userService.send('get_user', request.user_uuid).pipe(timeout(5000));
     const article = new Article();
 
     article.title = request.title;
     article.description = request.description;
     article.text = request.text;
-    article.user_uuid = user.uuid;
+    article.user_uuid = request.user_uuid;
 
     return await this.articleRepository.save(request);
   }

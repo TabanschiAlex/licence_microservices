@@ -5,6 +5,7 @@ export class createUserTable1650966774707 implements MigrationInterface {
   private readonly table = 'users';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.createSchema(process.env.DB_NAME, true);
     await queryRunner.createTable(
       new Table({
         name: this.table,
@@ -39,19 +40,3 @@ export class createUserTable1650966774707 implements MigrationInterface {
     await queryRunner.dropTable(this.table);
   }
 }
-
-/*
-* create table users
-(
-    uuid       varchar(36)                                         not null
-        primary key,
-    name       varchar(150)                                        null,
-    email      varchar(100)                                        not null,
-    password   varchar(100)                                        not null,
-    role       enum ('admin', 'user') default 'user'               not null,
-    created_at datetime(6)            default current_timestamp(6) null,
-    updated_at datetime(6)            default current_timestamp(6) null on update current_timestamp(6),
-    constraint IDX_97672ac88f789774dd47f7c8be
-        unique (email)
-);
-* */

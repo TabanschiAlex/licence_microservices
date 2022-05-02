@@ -4,6 +4,7 @@ export class createReviewTable1650971550804 implements MigrationInterface {
   private readonly table = 'reviews';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.createSchema(process.env.DB_NAME, true);
     await queryRunner.createTable(
       new Table({
         name: this.table,
@@ -37,20 +38,3 @@ export class createReviewTable1650971550804 implements MigrationInterface {
     await queryRunner.dropTable(this.table);
   }
 }
-
-/*
-* create table reviews
-(
-    id         int auto_increment
-        primary key,
-    text       text                                     not null,
-    created_at datetime(6) default current_timestamp(6) null,
-    updated_at datetime(6) default current_timestamp(6) null on update current_timestamp(6),
-    userUuid   varchar(36)                              null,
-    articleId  int                                      null,
-    constraint FK_90cde62258ae42ffff87ecadb53
-        foreign key (userUuid) references users (uuid),
-    constraint FK_a1ddd42718529c74f6848179530
-        foreign key (articleId) references posts (id)
-);
-* */
