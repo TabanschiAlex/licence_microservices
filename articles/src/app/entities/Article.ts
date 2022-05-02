@@ -14,11 +14,8 @@ export class Article {
   @Column({ type: 'text' })
   text: string;
 
-  @Column({ type: 'uuid', unique: true, nullable: true, primary: true })
+  @Column({ type: 'uuid', unique: true, nullable: true })
   user_uuid: string;
-
-  /*@OneToMany(() => Review, (reviews) => reviews.app)
-  reviews: Review[];*/
 
   @CreateDateColumn({ name: 'created_at', nullable: true })
   createdAt: Date;

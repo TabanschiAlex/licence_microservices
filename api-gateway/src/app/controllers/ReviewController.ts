@@ -41,7 +41,7 @@ export class ReviewController implements OnModuleInit {
       .pipe(timeout(5000));
   }
 
-  @Put(':id')
+  @Put()
   @UseGuards(JwtAuthGuard)
   public async update(@Req() request: RequestWithUser) {
     return this.reviewService

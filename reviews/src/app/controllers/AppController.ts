@@ -22,7 +22,7 @@ export class AppController {
     return ReviewResource.one(await this.reviewService.getOne(request.body.id));
   }
 
-  @MessagePattern('get_review')
+  @MessagePattern('store_review')
   public async store(@Payload('value') request: RequestWithUser): Promise<ReviewResource> {
     return ReviewResource.one(await this.reviewService.store(new CreateReviewDTO().transform(request)));
   }

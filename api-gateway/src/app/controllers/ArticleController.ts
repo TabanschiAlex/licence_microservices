@@ -41,7 +41,7 @@ export class ArticleController implements OnModuleInit {
       .pipe(timeout(5000));
   }
 
-  @Put(':id')
+  @Put()
   @UseGuards(JwtAuthGuard)
   public async update(@Req() request: RequestWithUser) {
     return this.articleService
