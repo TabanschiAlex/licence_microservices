@@ -1,19 +1,10 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Inject,
-  Param,
-  Post,
-  Put,
-  Query,
-  UseGuards,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Controller, Delete, Get, Inject, OnModuleInit, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { timeout } from 'rxjs';
 import { JwtAuthGuard } from '../guards/JwtAuthGuard';
+import { RequestDTO } from '../dto/RequestDTO';
+import { DataTypes } from '../enums/DataTypes';
+import { RequestWithUser } from '../interfaces/RequestWithUser';
 
 @Controller()
 export class AuthController implements OnModuleInit {
@@ -35,48 +26,50 @@ export class AuthController implements OnModuleInit {
   }
 
   @Post('auth/login')
-  public async login(@Body() request: any) {
-    return this.authService.send('login', request).pipe(timeout(5000));
+  public async login(@Req() request: RequestWithUser) {
+    return this.authService.send('login', new RequestDTO(DataTypes.BODY).transform(request)).pipe(timeout(5000));
   }
 
   @Post('auth/register')
-  public async register(@Body() request: any) {
-    return this.authService.send('register', request).pipe(timeout(5000));
+  public async register(@Req() request: RequestWithUser) {
+    return this.authService.send('register', new RequestDTO(DataTypes.BODY).transform(request)).pipe(timeout(5000));
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('users')
-  public async index(@Query() query: any) {
-    return this.authService.send('get_users', query).pipe(timeout(5000));
+  public async index(@Req() request: RequestWithUser) {
+    return this.authService.send('get_users', new RequestDTO(DataTypes.QUERY).transform(request)).pipe(timeout(5000));
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('users/:uuid')
-  public async edit(@Param('uuid') uuid: string) {
-    return this.authService.send('get_user', uuid).pipe(timeout(5000));
+  public async edit(@Req() request: RequestWithUser) {
+    return this.authService.send('get_user', new RequestDTO(DataTypes.PARAMS).transform(request)).pipe(timeout(5000));
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('users')
-  public store(@Body() request: any) {
-    return this.authService.send('store_user', request).pipe(timeout(5000));
+  public store(@Req() request: RequestWithUser) {
+    return this.authService.send('store_user', new RequestDTO(DataTypes.BODY).transform(request)).pipe(timeout(5000));
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('users')
-  public async update(@Body() request: any) {
-    return this.authService.send('update_user', request).pipe(timeout(5000));
+  public async update(@Req() request: RequestWithUser) {
+    return this.authService.send('update_user', new RequestDTO(DataTypes.BODY).transform(request)).pipe(timeout(5000));
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('users/:uuid')
-  public async destroy(@Param('uuid') uuid: string) {
-    return this.authService.send('destroy_user', uuid).pipe(timeout(5000));
+  public async destroy(@Param('uuid') uuid: string, @Req() request: RequestWithUser) {
+    return this.authService
+      .send('destroy_user', new RequestDTO(DataTypes.PARAMS).transform(request))
+      .pipe(timeout(5000));
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('users/:uuid/read')
-  public async read(@Param('uuid') uuid: string) {
-    return this.authService.send('read_user', uuid).pipe(timeout(5000));
+  public async read(@Param('uuid') uuid: string, @Req() request: RequestWithUser) {
+    return this.authService.send('read_user', new RequestDTO(DataTypes.PARAMS).transform(request)).pipe(timeout(5000));
   }
 }

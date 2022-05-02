@@ -1,11 +1,12 @@
 import { PipeTransform } from '@nestjs/common';
 import { AuthLoginRequest } from '../requests/auth/AuthLoginRequest';
+import { RequestWithUser } from '../interfaces/RequestWithUser';
 
 export class LoginDTO implements PipeTransform {
-  transform(auth: AuthLoginRequest): AuthLoginRequest {
+  transform(request: RequestWithUser): AuthLoginRequest {
     return {
-      email: auth.email,
-      password: auth.password,
+      email: request.body.email,
+      password: request.body.password,
     };
   }
 }
