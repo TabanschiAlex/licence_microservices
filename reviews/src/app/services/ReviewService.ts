@@ -26,6 +26,8 @@ export class ReviewService {
   }
 
   public async update(id: number, request: object | QueryDeepPartialEntity<Review>): Promise<UpdateResult> {
+    await this.reviewRepository.findOneOrFail(id);
+
     return await this.reviewRepository.update(id, request);
   }
 

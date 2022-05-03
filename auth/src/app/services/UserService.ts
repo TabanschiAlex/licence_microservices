@@ -30,6 +30,8 @@ export class UserService {
   }
 
   public async update(uuid: string, request: object | QueryDeepPartialEntity<User>): Promise<UpdateResult> {
+    await this.userRepository.findOneOrFail({ where: { uuid: uuid } });
+
     return await this.userRepository.update({ uuid: uuid }, request);
   }
 

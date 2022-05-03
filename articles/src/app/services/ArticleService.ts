@@ -37,6 +37,8 @@ export class ArticleService {
   }
 
   public async update(id: string, request: object | QueryDeepPartialEntity<Article>): Promise<UpdateResult> {
+    await this.articleRepository.findOneOrFail(id);
+
     return await this.articleRepository.update(id, request);
   }
 

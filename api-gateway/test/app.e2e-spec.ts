@@ -57,7 +57,6 @@ describe('MICROSERVICE TESTS (e2e)', () => {
       .send({ email: 'newUser@domain.com', password: '123456789', name: 'TEST' })
       .expect(201);
     responses.newUser = response.body;
-    console.log(response.body);
 
     return response;
   });
@@ -83,6 +82,7 @@ describe('MICROSERVICE TESTS (e2e)', () => {
       .set('Authorization', `Bearer ${responses.credentials.token}`)
       .expect(200, 'User deleted successfully');
   });
+
   // ---------------------------------------------------------------------------------------------------------------- //
   // --------------------------------------------- ARTICLE MICROSERVICE --------------------------------------------- //
   // ---------------------------------------------------------------------------------------------------------------- //
@@ -122,6 +122,58 @@ describe('MICROSERVICE TESTS (e2e)', () => {
   it('Delete Article: should delete article', async () => {
     return request(app.getHttpServer())
       .delete(`/articles/${responses.newArticle.id}`)
+      .set('Authorization', `Bearer ${responses.credentials.token}`)
+      .expect(200);
+  });
+
+  it('Create article for next request', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/articles')
+      .set('Authorization', `Bearer ${responses.credentials.token}`)
+      .send({ title: 'Test article', description: 'supertest', text: 'Article created by supertest' })
+      .expect(201);
+    responses.newArticle = response.body;
+
+    return response;
+  });
+
+  // ---------------------------------------------------------------------------------------------------------------- //
+  // --------------------------------------------- REVIEW MICROSERVICE ---------------------------------------------- //
+  // ---------------------------------------------------------------------------------------------------------------- //
+
+  it('Get Reviews: should return Review list', async () => {
+    return request(app.getHttpServer()).get('/reviews').expect(200);
+  });
+
+  it('Store Review: should return new Review', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/reviews')
+      .set('Authorization', `Bearer ${responses.credentials.token}`)
+      .send({ article_id: responses.newArticle.id, description: 'supertest', text: 'Review created by supertest' })
+      .expect(201);
+    responses.newReview = response.body;
+
+    return response;
+  });
+
+  it('Edit Review: should return One Review', async () => {
+    return request(app.getHttpServer()).get(`/reviews/${responses.newReview.id}`).expect(200);
+  });
+
+  it('Update Review: should update review', async () => {
+    return request(app.getHttpServer())
+      .put(`/reviews`)
+      .set('Authorization', `Bearer ${responses.credentials.token}`)
+      .send({
+        id: responses.newReview.id,
+        text: 'Edited review text',
+      })
+      .expect(200);
+  });
+
+  it('Delete Review: should delete review', async () => {
+    return request(app.getHttpServer())
+      .delete(`/reviews/${responses.newReview.id}`)
       .set('Authorization', `Bearer ${responses.credentials.token}`)
       .expect(200);
   });
