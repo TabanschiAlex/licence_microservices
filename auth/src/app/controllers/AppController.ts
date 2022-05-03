@@ -33,13 +33,13 @@ export class AppController {
   }
 
   @MessagePattern('get_users')
-  public async index(@Payload('value') query: RequestWithUser): Promise<UserResource> {
-    return UserResource.factory(await this.userService.getAll(new QueryDTO().transform(query)));
+  public async index(@Payload('value') request: RequestWithUser): Promise<UserResource> {
+    return UserResource.factory(await this.userService.getAll(new QueryDTO().transform(request)));
   }
 
   @MessagePattern('get_user')
   public async edit(@Payload('value') request: RequestWithUser): Promise<UserResource> {
-    return UserResource.one(await this.userService.getUserByUuid(request.body));
+    return UserResource.one(await this.userService.getUserByUuid(request.body.uuid));
   }
 
   @MessagePattern('store_user')
@@ -57,16 +57,16 @@ export class AppController {
 
   @MessagePattern('destroy_user')
   public async destroy(@Payload('value') request: RequestWithUser): Promise<string> {
-    await this.userService.delete(request.body);
-    this.articleService.emit('user_deleted', request.body);
-    this.reviewService.emit('user_deleted', request.body);
+    await this.userService.delete(request.body.uuid);
+    this.articleService.emit('user_deleted', request.body.uuid);
+    this.reviewService.emit('user_deleted', request.body.uuid);
 
     return 'User deleted successfully';
   }
 
   @MessagePattern('read_user')
   public async read(@Payload('value') request: RequestWithUser): Promise<UserResource> {
-    return UserResource.one(await this.userService.getUserByUuid(request.body));
+    return UserResource.one(await this.userService.getUserByUuid(request.body.uuid));
   }
 
   @MessagePattern('verify_token')
