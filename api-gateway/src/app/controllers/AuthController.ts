@@ -17,6 +17,7 @@ export class AuthController implements OnModuleInit {
     this.authService.subscribeToResponseOf('get_user');
     this.authService.subscribeToResponseOf('store_user');
     this.authService.subscribeToResponseOf('update_user');
+    this.authService.subscribeToResponseOf('update_user_name');
     this.authService.subscribeToResponseOf('destroy_user');
     this.authService.subscribeToResponseOf('read_user');
     this.authService.subscribeToResponseOf('verify_token');

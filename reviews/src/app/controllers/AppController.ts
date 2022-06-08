@@ -1,5 +1,5 @@
-import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
-import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
+import { Controller, Inject, OnModuleInit, UsePipes, ValidationPipe } from '@nestjs/common';
+import { ClientKafka, EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { ReviewService } from '../services/ReviewService';
 import { ReviewResource } from '../resources/ReviewResource';
 import { QueryDTO } from '../dto/QueryDTO';
@@ -7,11 +7,20 @@ import { CreateReviewDTO } from '../dto/CreateReviewDTO';
 import { UpdateReviewDTO } from '../dto/UpdateReviewDTO';
 import { RequestWithUser } from '../interfaces/RequestWithUser';
 import { UserRestrict } from '../guards/UserRestrict';
+import { timeout } from 'rxjs';
 
 @Controller()
 @UsePipes(ValidationPipe)
-export class AppController {
-  constructor(private readonly reviewService: ReviewService) {}
+export class AppController implements OnModuleInit {
+  constructor(
+    private readonly reviewService: ReviewService,
+    @Inject('ARTICLE_SERVICE') private readonly articleService: ClientKafka,
+  ) {}
+
+  async onModuleInit() {
+    this.articleService.subscribeToResponseOf('get_article');
+    await this.articleService.connect();
+  }
 
   @MessagePattern('get_reviews')
   public async index(@Payload('value') request: RequestWithUser): Promise<ReviewResource> {
@@ -25,7 +34,14 @@ export class AppController {
 
   @MessagePattern('store_review')
   public async store(@Payload('value') request: RequestWithUser): Promise<ReviewResource> {
-    return ReviewResource.one(await this.reviewService.store(new CreateReviewDTO().transform(request)));
+    const dto = new CreateReviewDTO().transform(request);
+
+    await this.articleService
+      .send('get_article', { body: { id: dto.article_id } })
+      .pipe(timeout(5000))
+      .toPromise();
+
+    return ReviewResource.one(await this.reviewService.store(dto));
   }
 
   @MessagePattern('update_review')
