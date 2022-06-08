@@ -1,0 +1,21 @@
+version: '3.3'
+
+services:
+  db:
+    image: mysql
+    container_name: db
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=db"
+    environment:
+      MYSQL_DATABASE: db
+      MYSQL_ROOT_PASSWORD: "123456"
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    networks:
+      - microservices
+
+networks:
+  microservices:
+    external: true

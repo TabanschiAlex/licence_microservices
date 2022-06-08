@@ -6,6 +6,7 @@ import { QueryDTO } from '../dto/QueryDTO';
 import { CreateArticleDTO } from '../dto/CreateArticleDTO';
 import { UpdateArticleDTO } from '../dto/UpdateArticleDTO';
 import { RequestWithUser } from '../interfaces/RequestWithUser';
+import { UserRestrict } from '../guards/UserRestrict';
 
 @Controller('articles')
 @UsePipes(ValidationPipe)
@@ -27,11 +28,14 @@ export class AppController {
 
   @MessagePattern('store_article')
   public async store(@Payload('value') request: RequestWithUser): Promise<ArticleResource> {
+    UserRestrict.canAccess(request.user.role);
+
     return ArticleResource.one(await this.articleService.store(new CreateArticleDTO().transform(request)));
   }
 
   @MessagePattern('update_article')
   public async update(@Payload('value') request: RequestWithUser): Promise<string> {
+    UserRestrict.canAccess(request.user.role);
     const dto = new UpdateArticleDTO().transform(request);
     await this.articleService.update(dto.id, dto);
 
@@ -40,6 +44,7 @@ export class AppController {
 
   @MessagePattern('destroy_article')
   public async destroy(@Payload('value') request: RequestWithUser): Promise<string> {
+    UserRestrict.canAccess(request.user.role);
     await this.articleService.delete(request.body.id);
     this.reviewService.emit('article_deleted', request.body.id);
 

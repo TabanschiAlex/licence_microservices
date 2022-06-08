@@ -6,6 +6,7 @@ import { QueryDTO } from '../dto/QueryDTO';
 import { CreateReviewDTO } from '../dto/CreateReviewDTO';
 import { UpdateReviewDTO } from '../dto/UpdateReviewDTO';
 import { RequestWithUser } from '../interfaces/RequestWithUser';
+import { UserRestrict } from '../guards/UserRestrict';
 
 @Controller()
 @UsePipes(ValidationPipe)
@@ -30,14 +31,16 @@ export class AppController {
   @MessagePattern('update_review')
   public async update(@Payload('value') request: RequestWithUser): Promise<string> {
     const dto = new UpdateReviewDTO().transform(request);
-    await this.reviewService.update(dto.id, dto);
+    const scope = UserRestrict.applyScope(request.user, dto.id);
+    await this.reviewService.update(dto.id, dto, scope.uuid);
 
     return 'Updated';
   }
 
   @MessagePattern('destroy_review')
   public async destroy(@Payload('value') request: RequestWithUser): Promise<string> {
-    await this.reviewService.delete(request.body.id);
+    const scope = UserRestrict.applyScope(request.user, request.body.id);
+    await this.reviewService.delete(scope.id, scope.uuid);
 
     return 'Deleted';
   }
